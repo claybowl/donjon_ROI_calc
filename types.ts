@@ -1,4 +1,3 @@
-
 export interface BaseConfig {
   label: string;
   description: string;
@@ -22,8 +21,8 @@ export interface Product {
   id: string;
   name: string;
   description: string;
-  price: number;
-  costType: 'monthly' | 'oneTime';
+  priceOneTime: number;
+  priceMonthly: number;
   gains: Gain[];
 }
 

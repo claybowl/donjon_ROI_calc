@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { InputPanel } from './components/InputPanel';
 import { ResultsPanel } from './components/ResultsPanel';
@@ -53,16 +52,8 @@ function App() {
       p.gains.forEach(gain => activeGains.add(gain));
     });
 
-    let monthlyServiceProCost = 0;
-    let oneTimeServiceProCost = 0;
-
-    selectedProducts.forEach(p => {
-      if (p.costType === 'monthly') {
-        monthlyServiceProCost += p.price;
-      } else {
-        oneTimeServiceProCost += p.price;
-      }
-    });
+    const monthlyServiceProCost = selectedProducts.reduce((acc, p) => acc + p.priceMonthly, 0);
+    const oneTimeServiceProCost = selectedProducts.reduce((acc, p) => acc + p.priceOneTime, 0);
 
     // Amortize one-time cost over 12 months for monthly profit calculation
     const amortizedOneTimeCost = oneTimeServiceProCost / 12;

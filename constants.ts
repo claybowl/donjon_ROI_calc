@@ -1,4 +1,3 @@
-
 import type { CalculatorInputs, InputConfig, ModelAssumptions, AssumptionConfig, ProductCategory } from './types';
 
 export const INITIAL_INPUTS: CalculatorInputs = {
@@ -29,9 +28,9 @@ export const PRODUCTS_CONFIG: ProductCategory[] = [
     description: 'Bundled packages for complete digital transformation.',
     selectionType: 'single',
     products: [
-      { id: 'solo', name: 'SOLO Package', description: 'Website, AI chatbot, booking, database, email/SMS, Google integrations.', price: 1299, costType: 'oneTime', gains: ['timeSavings', 'callsCaptured', 'noShowReduction', 'conversionLift', 'afterHoursBookings'] },
-      { id: 'crew', name: 'CREW Package', description: 'Everything in SOLO + multi-user, unlimited customers, invoicing, payments.', price: 2499, costType: 'oneTime', gains: ['timeSavings', 'callsCaptured', 'noShowReduction', 'conversionLift', 'afterHoursBookings'] },
-      { id: 'fleet', name: 'FLEET Package', description: 'Everything in CREW + multi-location, route optimization, full CRM, API.', price: 3999, costType: 'oneTime', gains: ['timeSavings', 'callsCaptured', 'noShowReduction', 'conversionLift', 'afterHoursBookings'] },
+      { id: 'solo', name: 'SOLO Package', description: 'Website, AI chatbot, booking, database, email/SMS, Google integrations.', priceOneTime: 1299, priceMonthly: 29, gains: ['timeSavings', 'callsCaptured', 'noShowReduction', 'conversionLift', 'afterHoursBookings'] },
+      { id: 'crew', name: 'CREW Package', description: 'Everything in SOLO + multi-user, unlimited customers, invoicing, payments.', priceOneTime: 2499, priceMonthly: 59, gains: ['timeSavings', 'callsCaptured', 'noShowReduction', 'conversionLift', 'afterHoursBookings'] },
+      { id: 'fleet', name: 'FLEET Package', description: 'Everything in CREW + multi-location, route optimization, full CRM, API.', priceOneTime: 3999, priceMonthly: 99, gains: ['timeSavings', 'callsCaptured', 'noShowReduction', 'conversionLift', 'afterHoursBookings'] },
     ]
   },
   {
@@ -39,10 +38,10 @@ export const PRODUCTS_CONFIG: ProductCategory[] = [
     description: 'Select individual tools when you only need one piece of the puzzle.',
     selectionType: 'multiple',
     products: [
-      { id: 'chatbot', name: 'AI Chatbot', description: '24/7 lead capture, FAQs, warm hand-offs.', price: 49, costType: 'monthly', gains: ['callsCaptured', 'conversionLift', 'afterHoursBookings'] },
-      { id: 'booking', name: 'Booking System', description: 'Self-serve scheduling, reminders, calendar sync.', price: 39, costType: 'monthly', gains: ['timeSavings', 'noShowReduction'] },
-      { id: 'crm', name: 'Simple CRM', description: 'Pipeline tracking, customer notes, follow-ups.', price: 59, costType: 'monthly', gains: ['conversionLift'] },
-      { id: 'analytics', name: 'Analytics Dashboard', description: 'Dashboards for leads, bookings, revenue, and ROI.', price: 29, costType: 'monthly', gains: [] },
+      { id: 'chatbot', name: 'AI Chatbot', description: '24/7 lead capture, FAQs, warm hand-offs.', priceOneTime: 0, priceMonthly: 49, gains: ['callsCaptured', 'conversionLift', 'afterHoursBookings'] },
+      { id: 'booking', name: 'Booking System', description: 'Self-serve scheduling, reminders, calendar sync.', priceOneTime: 0, priceMonthly: 39, gains: ['timeSavings', 'noShowReduction'] },
+      { id: 'crm', name: 'Simple CRM', description: 'Pipeline tracking, customer notes, follow-ups.', priceOneTime: 0, priceMonthly: 59, gains: ['conversionLift'] },
+      { id: 'analytics', name: 'Analytics Dashboard', description: 'Dashboards for leads, bookings, revenue, and ROI.', priceOneTime: 0, priceMonthly: 29, gains: [] },
     ]
   }
 ];

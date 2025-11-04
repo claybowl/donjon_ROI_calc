@@ -1,4 +1,3 @@
-
 import React from 'react';
 import type { ProductCategory } from '../types';
 import { PRODUCTS_CONFIG } from '../constants';
@@ -53,8 +52,9 @@ export const ProductSelector: React.FC<ProductSelectorProps> = ({ selectedIds, o
                   <span className="font-medium text-slate-200">{product.name}</span>
                   <p className="text-slate-400">{product.description}</p>
                   <p className="font-semibold text-cyan-400 mt-1">
-                    ${product.price.toLocaleString()}
-                    {product.costType === 'monthly' ? '/mo' : ' one-time'}
+                    {product.priceOneTime > 0 && <span>${product.priceOneTime.toLocaleString()} one-time</span>}
+                    {product.priceOneTime > 0 && product.priceMonthly > 0 && <span className="mx-1">+</span>}
+                    {product.priceMonthly > 0 && <span>${product.priceMonthly.toLocaleString()}/mo</span>}
                   </p>
                 </div>
               </label>
