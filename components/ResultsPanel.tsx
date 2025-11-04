@@ -1,5 +1,13 @@
+
 import React from 'react';
 import type { CalculatedOutputs } from '../types';
+
+interface ResultsPanelProps {
+  results: CalculatedOutputs;
+  strategicAnalysis: string;
+  isAnalyzing: boolean;
+  analysisError: string | null;
+}
 
 const formatCurrency = (value: number) => `$${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
 
@@ -29,12 +37,30 @@ const RoiMetric: React.FC<{ label: string; value: string; large?: boolean }> = (
     </div>
 );
 
-export const ResultsPanel: React.FC<{ results: CalculatedOutputs }> = ({ results }) => {
+export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, strategicAnalysis, isAnalyzing, analysisError }) => {
   const hasMonthlyCost = results.monthlyServiceProCost > 0;
   const hasOneTimeCost = results.oneTimeServiceProCost > 0;
 
   return (
     <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-6">
+
+      <Section title="AI Strategic Analysis" icon="🤖">
+        <div className="min-h-[6rem] flex items-center justify-center">
+          {isAnalyzing && (
+            <div className="flex items-center text-slate-400">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Analyzing your business...</span>
+            </div>
+          )}
+          {analysisError && <p className="text-red-400 text-sm">{analysisError}</p>}
+          {!isAnalyzing && !analysisError && strategicAnalysis && (
+            <div className="text-sm text-slate-300 whitespace-pre-wrap w-full">{strategicAnalysis}</div>
+          )}
+        </div>
+      </Section>
       
       <Section title="ROI Summary" icon="🎯">
         <div className="grid grid-cols-1 gap-4">
@@ -49,7 +75,6 @@ export const ResultsPanel: React.FC<{ results: CalculatedOutputs }> = ({ results
 
       <Section title="Monthly Gains with ServicePro" icon="🟢">
         <Metric label="Time Savings" value={formatCurrency(results.timeSavingsGain)} colorClass="text-green-400" />
-        {/* Fix: Corrected typo from format_Currency to formatCurrency */}
         <Metric label="Calls Captured" value={formatCurrency(results.callsCapturedGain)} colorClass="text-green-400" />
         <Metric label="No-Show Reduction" value={formatCurrency(results.noShowReductionGain)} colorClass="text-green-400" />
         <Metric label="Conversion Lift" value={formatCurrency(results.conversionLiftGain)} colorClass="text-green-400" />

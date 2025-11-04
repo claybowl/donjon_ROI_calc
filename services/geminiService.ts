@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import type { CalculatorInputs } from '../types';
+import type { CalculatorInputs, CalculatedOutputs } from '../types';
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -71,5 +71,48 @@ export async function generateBusinessProfile(businessDescription: string): Prom
   } catch (error) {
     console.error("Error generating business profile:", error);
     throw new Error("Failed to generate AI profile. Please try a different description or check the console.");
+  }
+}
+
+
+export async function generateStrategicAnalysis(inputs: CalculatorInputs, results: CalculatedOutputs): Promise<string> {
+  try {
+    const prompt = `
+      You are a sharp, insightful business consultant for a company called "ServicePro".
+      Your task is to provide a brief, actionable strategic analysis for a potential client based on their ROI calculator inputs.
+      The analysis should be encouraging and highlight how ServicePro can solve their biggest problems.
+      Use simple markdown for formatting (like **bolding** or bullet points using '*'). Do NOT use markdown headers (e.g., ###).
+
+      **Client's Business Profile:**
+      - Monthly Bookings: ${inputs.monthlyBookings}
+      - Average Job Value: $${inputs.avgJobValue}
+      - Team spends ${inputs.schedulingTime} hours/week on scheduling at a rate of $${inputs.hourlyRate}/hr.
+      - Misses ${inputs.missedCallsPerWeek} calls per week.
+      - Current No-Show Rate: ${inputs.noShowRate}%
+      - Current Conversion Rate: ${inputs.conversionRate}%
+
+      **Calculated ROI & Costs:**
+      - Total Hidden Monthly Costs (labor, missed calls, no-shows): $${results.totalCurrentCost.toFixed(0)}
+      - Potential Total Monthly Gain with ServicePro: $${results.totalMonthlyGain.toFixed(0)}
+      - Projected Net Monthly Profit with ServicePro: $${results.netMonthlyProfit.toFixed(0)}
+
+      **Analysis Requirements:**
+      1.  Start with a strong, insightful opening sentence that summarizes their key challenge or opportunity.
+      2.  Identify the TOP 1-2 "weaknesses" or cost centers based on the data (e.g., "**Missed calls** are costing you significantly...").
+      3.  Identify the TOP 1-2 "opportunities" for growth that ServicePro unlocks (e.g., "**Automating scheduling** could free up your team...").
+      4.  Conclude with a powerful summary sentence about the value of implementing ServicePro.
+      5.  Keep the entire analysis to 3-4 short paragraphs or a few bullet points. Be concise and impactful.
+    `;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-lite',
+      contents: prompt,
+    });
+
+    return response.text.trim();
+
+  } catch (error) {
+    console.error("Error generating strategic analysis:", error);
+    throw new Error("Failed to generate AI analysis. The model may be busy, please try again shortly.");
   }
 }

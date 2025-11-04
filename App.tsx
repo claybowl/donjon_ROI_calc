@@ -1,10 +1,10 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { InputPanel } from './components/InputPanel';
 import { ResultsPanel } from './components/ResultsPanel';
 import { INITIAL_INPUTS, INITIAL_ASSUMPTIONS, PRODUCTS_CONFIG } from './constants';
 import type { CalculatorInputs, CalculatedOutputs, ModelAssumptions, Gain } from './types';
-import { generateBusinessProfile } from './services/geminiService';
+import { generateBusinessProfile, generateStrategicAnalysis } from './services/geminiService';
 
 function App() {
   const [inputs, setInputs] = useState<CalculatorInputs>(INITIAL_INPUTS);
@@ -13,6 +13,12 @@ function App() {
   const [businessType, setBusinessType] = useState('a small auto detailing shop');
   const [isGenerating, setIsGenerating] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+
+  const [strategicAnalysis, setStrategicAnalysis] = useState<string>('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const debounceTimeoutRef = useRef<number | null>(null);
+
 
   const handleInputChange = (field: keyof CalculatorInputs, value: number) => {
     setInputs(prev => ({ ...prev, [field]: value }));
@@ -117,6 +123,33 @@ function App() {
     };
   }, [inputs, assumptions, selectedIds]);
 
+  useEffect(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+    
+    setIsAnalyzing(true);
+    setAnalysisError(null);
+
+    debounceTimeoutRef.current = window.setTimeout(async () => {
+      try {
+        const analysis = await generateStrategicAnalysis(inputs, results);
+        setStrategicAnalysis(analysis);
+      } catch (error) {
+        setAnalysisError(error instanceof Error ? error.message : "An unknown error occurred.");
+        setStrategicAnalysis('');
+      } finally {
+        setIsAnalyzing(false);
+      }
+    }, 1000); // 1-second debounce
+
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [inputs, results]);
+
   return (
     <div className="min-h-screen bg-slate-900 text-slate-300 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
@@ -143,6 +176,9 @@ function App() {
           />
           <ResultsPanel 
             results={results}
+            strategicAnalysis={strategicAnalysis}
+            isAnalyzing={isAnalyzing}
+            analysisError={analysisError}
           />
         </main>
         
